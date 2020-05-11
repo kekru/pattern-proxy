@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  pattern-proxy:
+    build: .
+    ports:
+      - "30080:80"
+    environment:
+      RULE_1_MODE: HTTP
+      RULE_1_PATTERN: '(?<service>.+).127-0-0-1.nip.io'
+      RULE_1_TARGET: 'https://$$service.example.com'
+      # RULE_2_MODE: HTTP
+      # RULE_2_PATTERN: '(?<service>.+)-(?<deployment>.+)-(?<namespace>.+).app.192.168.0.150.nip.io'
+      # RULE_2_TARGET: '$service-$deployment-public.$namespace.svc.cluster.local.192.168.0.150.nip.io:9876'
+      # DNS_RESOLVER: kube-dns.kube-system.svc.cluster.local
