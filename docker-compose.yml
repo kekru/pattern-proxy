@@ -2,14 +2,20 @@ version: '3.4'
 
 services:
   pattern-proxy:
+    # To get image from docker hub
+    # remove "build" and use image: kekru/pattern-proxy:v0.1.0
     build: .
+    image: kekru/pattern-proxy:latest
     ports:
-      - "30080:80"
+      - "80:80"
     environment:
       RULE_1_MODE: HTTP
-      RULE_1_PATTERN: '(?<service>.+).127-0-0-1.nip.io'
-      RULE_1_TARGET: 'https://$$service.example.com'
-      # RULE_2_MODE: HTTP
-      # RULE_2_PATTERN: '(?<service>.+)-(?<deployment>.+)-(?<namespace>.+).app.192.168.0.150.nip.io'
-      # RULE_2_TARGET: '$service-$deployment-public.$namespace.svc.cluster.local.192.168.0.150.nip.io:9876'
+      RULE_1_PATTERN: '(?<service>.+).ab.127-0-0-1.nip.io'
+      RULE_1_TARGET: 'https://$$service.ab.example.com'
+      RULE_2_MODE: HTTP
+      RULE_2_PATTERN: '(?<service>.+).xy.127-0-0-1.nip.io'
+      RULE_2_TARGET: 'https://$$service.xy.example.com'
+      # RULE_3_MODE: HTTP
+      # RULE_3_PATTERN: '(?<service>.+)-(?<deployment>.+)-(?<namespace>.+).app.192.168.0.150.nip.io'
+      # RULE_3_TARGET: '$service-$deployment-public.$namespace.svc.cluster.local.192.168.0.150.nip.io:9876'
       # DNS_RESOLVER: kube-dns.kube-system.svc.cluster.local

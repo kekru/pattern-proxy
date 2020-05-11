@@ -1,7 +1,10 @@
 #!/bin/sh
 set -e
 
-mkdir /data/configs
+mkdir -p /data/configs/http
+mkdir -p /data/configs/https
+mkdir -p /data/configs/tlspass
+mkdir -p /data/configs/tlsterm
 
 printenv | while IFS='=' read -r envName envValue
 do
@@ -22,7 +25,7 @@ do
       echo "MODE TLSPASS is not yet implemented"
       exit 1
 
-      file="/data/configs/tlspass.conf"
+      file="/data/configs/tlspass/tlspass-$ruleName.conf"
       cp /data/templates/TLSPASS.conf $file
       sed -i "/#RULES/a $pattern $target;" $file
     fi
@@ -31,13 +34,13 @@ do
       echo "MODE TLSTERM is not yet implemented"
       exit 1
 
-      file="/data/configs/tlsterm.conf"
+      file="/data/configs/tlsterm/tlsterm-$ruleName.conf"
       cp /data/templates/TLSTERM.conf $file
       sed -i "/#RULES/a $pattern $target;" $file
     fi
 
     if [[ "$mode" == "HTTP" ]]; then
-      file="/data/configs/http.conf"
+      file="/data/configs/http/http-$ruleName.conf"
       cp /data/templates/HTTP.conf $file
       sed -i "s|PATTERN|$pattern|g" $file
       sed -i "s|TARGET|$target|g" $file
@@ -48,7 +51,7 @@ do
       echo "MODE HTTPS is not yet implemented"
       exit 1
 
-      file="/data/configs/https.conf"
+      file="/data/configs/https/https-$ruleName.conf"
       cp /data/templates/HTTPS.conf $file
       sed -i "/#RULES/a $pattern $target;" $file
     fi
@@ -56,7 +59,7 @@ do
    
 done
 
-if [ -z "$(ls -A /data/configs)" ]; then
+if [ -z "$(ls -A /data/configs/http)" ]; then
   echo "No config files were written"
   echo "check your env vars:"
   printenv
