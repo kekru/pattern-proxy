@@ -47,7 +47,7 @@ Or run without compose:
   docker run -p 80:80 --name pattern-proxy \
     -e RULE_1_MODE=HTTP \
     -e RULE_1_PATTERN='(?<service>.+).ab.127-0-0-1.nip.io' \
-    -e RULE_1_TARGET='https://$$service.ab.example.com' \
+    -e RULE_1_TARGET='https://$service.ab.example.com' \
     kekru/pattern-proxy:v0.1.0
 ```
 
