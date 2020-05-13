@@ -18,11 +18,11 @@ Example:
 ```bash
 RULE_1_MODE: 'HTTP'
 RULE_1_PATTERN: '(?<service>.+).ab.127-0-0-1.nip.io'
-RULE_1_TARGET: 'https://$$service.ab.example.com'
+RULE_1_TARGET: 'https://$service.ab.example.com'
 
 RULE_2_MODE: 'HTTP'
 RULE_2_PATTERN: '(?<service>.+).xy.127-0-0-1.nip.io'
-RULE_2_TARGET: 'https://$$service.xy.example.com'
+RULE_2_TARGET: 'https://$service.xy.example.com'
 ```
 
 This creates two rules.  
