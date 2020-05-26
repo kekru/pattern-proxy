@@ -1,11 +1,13 @@
 package de.kekru.patternproxy.test;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
@@ -20,6 +22,40 @@ public class IntegrationTest {
   private int mockServerMappedPort;
 
   private MockServerClient mockServerClient;
+
+  @Test
+  public void testPatternResolvesCorrectly() {
+    try (
+        Network network = createNetwork();
+        GenericContainer mockServerContainer = createMockServer(network);
+        GenericContainer patternProxyContainer = createPatternProxy(network);
+    ) {
+      mockServerContainer.start();
+      patternProxyContainer.start();
+      patternProxyMappedPort = patternProxyContainer.getMappedPort(80);
+      mockServerMappedPort = mockServerContainer.getMappedPort(1090);
+      patternProxyContainer.followOutput(new Slf4jLogConsumer(LOG_PATTERN_PROXY));
+
+
+      mockServerClient = new MockServerClient("localhost", mockServerMappedPort);
+      mockServerClient
+          .when(request()
+              .withMethod("GET")
+              .withHeader("Host", "abc.mock-server:1090")
+              .withPath("/something"))
+          .respond(response()
+              .withStatusCode(200)
+              .withContentType(MediaType.JSON_UTF_8)
+              .withBody("{ \"message\": \"It Works, requested was abc.mock-server:1090\" }"));
+
+      given()
+          .when()
+          .redirects().follow(false)
+          .get("http://abc.pp.127-0-0-1.nip.io:" + patternProxyMappedPort + "/something")
+          .then()
+          .body("message", equalTo("It Works, requested was abc.mock-server:1090"));
+    }
+  }
 
   @Test
   public void testRedirectReaplacesWithClientsRequestHostHeader() {
