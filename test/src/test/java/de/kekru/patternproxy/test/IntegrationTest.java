@@ -22,7 +22,7 @@ public class IntegrationTest {
   private MockServerClient mockServerClient;
 
   @Test
-  public void test() {
+  public void testRedirectReaplacesWithClientsRequestHostHeader() {
     try (
         Network network = createNetwork();
         GenericContainer mockServerContainer = createMockServer(network);
