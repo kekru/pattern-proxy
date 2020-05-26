@@ -5,7 +5,7 @@ services:
     # To get image from docker hub
     # remove "build" and use image: kekru/pattern-proxy:v0.1.0
     build: .
-    image: kekru/pattern-proxy:latest
+    image: kekru/pattern-proxy:temp
     ports:
       - "80:80"
     environment:
