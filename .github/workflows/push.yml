@@ -3,11 +3,9 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./test
     steps:
       - uses: actions/checkout@v2
       - name: Build
-        run: docker-compose build
+        run: cd test && docker-compose build
       - name: Test
-        run: docker-compose run tests
+        run: cd test && docker-compose run tests
