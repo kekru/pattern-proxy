@@ -63,3 +63,17 @@ Proxies modes that should be supported:
 > Currently only HTTP proxy pass is implemented
 
 For more information about TLS routing see [Nginx TLS SNI routing, based on subdomain pattern](https://gist.github.com/kekru/c09dbab5e78bf76402966b13fa72b9d2)
+
+## Run Tests
+
+Tests are written in JUnit with Testcontainers and can be run with Maven or with Docker-Compose
+
+```bash
+cd test
+
+# Run with maven
+docker-compose build pattern-proxy && ./mvnw test
+
+# Run with Docker-Compose
+docker-compose build && docker-compose run tests
+```
