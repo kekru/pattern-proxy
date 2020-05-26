@@ -1,1 +1,6 @@
 tmp
+.vscode
+.classpath
+.project
+test/target
+test/.settings
