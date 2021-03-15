@@ -18,8 +18,9 @@ do
     eval mode='$RULE_'$ruleName'_MODE'
     eval pattern='$RULE_'$ruleName'_PATTERN'
     eval target='$RULE_'$ruleName'_TARGET'
+    eval targetHostHeader='$RULE_'$ruleName'_TARGET_HOST_HEADER'
 
-    echo "Configuring rule $ruleName, mode: $mode, pattern: $pattern, target: $target"
+    echo "Configuring rule $ruleName, mode: $mode, pattern: $pattern, target: $target, targetHostHeader: $targetHostHeader"
 
     if [[ "$mode" == "TLSPASS" ]]; then
       echo "MODE TLSPASS is not yet implemented"
@@ -43,7 +44,11 @@ do
       file="/data/configs/http/http-$ruleName.conf"
       cp /data/templates/HTTP.conf $file
       sed -i "s|PATTERN|$pattern|g" $file
-      sed -i "s|TARGET|$target|g" $file
+      sed -i "s|TARGET_HOST_ADDRESS|$target|g" $file
+      if [ -z "$targetHostHeader" ]; then
+        targetHostHeader="\$proxy_host"
+      fi
+      sed -i "s|TARGET_HOST_HEADER|$targetHostHeader|g" $file
       sed -i "s|DNS_RESOLVER|$DNS_RESOLVER|g" $file
     fi
       

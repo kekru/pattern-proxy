@@ -7,11 +7,12 @@ Inspired by [robszumski/k8s-service-proxy](https://github.com/robszumski/k8s-ser
 
 ## Configuration
 
-Every proxy rule consist of three env variables:
+Every proxy rule consist of three or four env variables:
 
 + `RULE_1_MODE`: &lt;mode&gt;
 + `RULE_1_PATTERN`: &lt;regex pattern&gt; (see [nginx regex names](http://nginx.org/en/docs/http/server_names.html#regex_names))
 + `RULE_1_TARGET`: &lt;target with usage of pattern variables&gt;
++ `RULE_1_TARGET_HOST_HEADER`: &lt;(Optional) modified host header, defaults to TARGET&gt;
 
 Example:  
 
@@ -23,6 +24,7 @@ RULE_1_TARGET: 'https://$service.ab.example.com'
 RULE_2_MODE: 'HTTP'
 RULE_2_PATTERN: '(?<service>.+).xy.127-0-0-1.nip.io'
 RULE_2_TARGET: 'https://$service.xy.example.com'
+RULE_2_TARGET_HOST_HEADER: '$service.modified-host.example.com'
 ```
 
 This creates two rules.  
@@ -31,7 +33,8 @@ The following example requests will get the shown proxy actions:
 + `http://hello.ab.127-0-0-1.nip.io` will proxy pass to  
   `https://hello.ab.example.com`
 + `http://world.xy.127-0-0-1.nip.io` will proxy pass to  
-  `https://world.xy.example.com`
+  `https://world.xy.example.com`  
+  but send the host header `world.modified-host.example.com`
 
 > Currently only mode HTTP is implemented
 
